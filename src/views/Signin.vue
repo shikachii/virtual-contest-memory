@@ -1,41 +1,39 @@
 <template>
   <div class="$style.root">
     <h2>ログイン</h2>
-    <input type="text" v-model="account.username" />
-    <input type="password" v-model="account.password" />
+    <input type="text" v-model="username" />
+    <input type="password" v-model="password" />
     <button @click="signin">送信</button>
     <div>
-      {{ account.username }}
+      {{ username }}
     </div>
     <div>
-      {{ account.password }}
+      {{ password }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-
-type AccountType = {
-  username: string;
-  password: string;
-};
+import firebase from 'firebase';
 
 type DataType = {
-  account: AccountType;
+  username: string;
+  password: string;
 };
 
 export default Vue.extend({
   name: 'Signin',
   data: (): DataType => ({
-    account: {
-      username: '',
-      password: '',
-    },
+    username: '',
+    password: '',
   }),
   methods: {
-    signin() {
-      console.log(`${this.account.username} : ${this.account.password}`);
+    async signin() {
+      const user = await firebase.auth()
+        .signInWithEmailAndPassword(this.username, this.password);
+      console.log(user);
+      this.$router.push({ name: 'Home' });
     },
   },
 });
