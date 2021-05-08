@@ -1,11 +1,15 @@
 <template>
   <div :class="$style.root">
     Header
-    {{ uid }}
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
-    <router-link to="/signin">Signin</router-link> |
-    <router-link to="/signup">Signup</router-link>
+    <template v-if="user">
+      <router-link :to="{ name: 'mypage', params: { id: user.uid }}">マイページ</router-link>
+    </template>
+    <template v-else>
+      <router-link to="/signin">Signin</router-link> |
+      <router-link to="/signup">Signup</router-link>
+    </template>
   </div>
 </template>
 
@@ -16,8 +20,8 @@ import firebase from 'firebase';
 export default Vue.extend({
   name: 'header',
   computed: {
-    uid() {
-      return firebase.auth().currentUser.uid;
+    user() {
+      return firebase.auth().currentUser;
     },
   },
 });
