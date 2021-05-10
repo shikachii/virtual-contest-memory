@@ -1,7 +1,7 @@
 <template>
-  <div class="$style.root">
+  <div :class="$style.root">
+    <h2>マイページ</h2>
     Hello, {{ uid }}!
-    <button @click="logout">ログアウト</button>
   </div>
 </template>
 
@@ -15,14 +15,10 @@ export default Vue.extend({
       return this.$route.params.id;
     },
   },
-  methods: {
-    async logout() {
-      await firebase.auth().signOut();
-      this.$router.push({ name: 'Home' });
-    },
-  },
 });
 </script>
 
 <style module>
+.root {
+}
 </style>

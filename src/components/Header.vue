@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.root">
-    Header
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
-    <template v-if="user">
-      <router-link :to="{ name: 'mypage', params: { id: user.uid }}">マイページ</router-link>
+    <template v-if="uid">
+      <router-link :to="{ name: 'mypage', params: { id: uid }}">マイページ</router-link> |
+      <span @click="logout">ログアウト</span>
     </template>
     <template v-else>
       <router-link to="/signin">Signin</router-link> |
@@ -15,13 +15,19 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import firebase from 'firebase';
+import * as firebase from '@/plugins/firebase';
 
 export default Vue.extend({
-  name: 'header',
+  name: 'Header',
   computed: {
-    user() {
-      return firebase.auth().currentUser;
+    uid() {
+      return this.$store.state.auth.uid;
+    },
+  },
+  methods: {
+    async logout() {
+      await firebase.auth.signOut();
+      this.$router.push({ name: 'Home' });
     },
   },
 });
@@ -30,7 +36,9 @@ export default Vue.extend({
 <style module>
 .root {
   padding: 30px;
-  background: #5cb85c;
+  background: #fff;
+  border-bottom: 2px solid #5cb85c;
+  /* background: #5cb85c; */
 }
 
 .root a {
@@ -41,5 +49,12 @@ export default Vue.extend({
 .root a.router-link-exact-active {
   /* color: #42b983; */
   color: #fff;
+}
+
+.root span {
+  font-weight: bold;
+  color: #2c3e50;
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>

@@ -1,21 +1,21 @@
 <template>
-  <div class="$style.root">
+  <div :class="$style.root">
     <h2>ログイン</h2>
-    <input type="text" v-model="username" />
-    <input type="password" v-model="password" />
-    <button @click="signin">送信</button>
-    <div>
-      {{ username }}
+    <div :class="$style.email">
+      <div :class="$style.label">メールアドレス</div>
+      <input type="email" v-model="username" />
     </div>
-    <div>
-      {{ password }}
+    <div :class="$style.password">
+      <div :class="$style.label">パスワード</div>
+      <input type="password" v-model="password" />
     </div>
+    <button :class="$style.submit" @click="signin">ログイン</button>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import firebase from 'firebase';
+import * as firebase from '@/plugins/firebase';
 
 type DataType = {
   username: string;
@@ -30,14 +30,65 @@ export default Vue.extend({
   }),
   methods: {
     async signin() {
-      const user = await firebase.auth()
-        .signInWithEmailAndPassword(this.username, this.password);
-      console.log(user);
-      this.$router.push({ name: 'Home' });
+      await firebase.auth
+        .signInWithEmailAndPassword(this.username, this.password)
+        .then((user) => {
+          if (user !== null && user.user !== null) {
+            console.log(user.user.uid);
+          }
+          this.$router.push({ name: 'Home' });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
   },
 });
 </script>
 
 <style module>
+.root {
+  width: 300px;
+  margin: 0px auto;
+}
+
+.label {
+  text-align: left;
+}
+
+.email {
+  margin-bottom: 20px;
+}
+
+.email input {
+  width: 100%;
+  padding: 5px 5px;
+  font-size: 15px;
+  border: 1px #888 solid;
+  border-radius: 5px;
+}
+
+.password {
+  margin-bottom: 30px;
+}
+
+.password input {
+  width: 100%;
+  padding: 5px 5px;
+  font-size: 15px;
+  border: 1px #888 solid;
+  border-radius: 5px;
+}
+
+.submit {
+  width: 200px;
+  padding: 5px 5px;
+  background: #5cb85c;
+  border: 1px solid #00000000;
+  border-radius: 5px;
+
+  font-size: 15px;
+  color: #fff;
+  cursor: pointer;
+}
 </style>
