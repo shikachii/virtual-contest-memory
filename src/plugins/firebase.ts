@@ -16,3 +16,5 @@ fi.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 export const auth = fi.auth();
 
 export const db = fi.firestore();
+
+export const fv = firebase.firestore.FieldValue;
